@@ -1,0 +1,20 @@
+.publicname{text-transform:lowercase;}
+::-webkit-input-placeholder {
+	text-transform: initial;
+}
+:-moz-placeholder {
+	text-transform: initial;
+}
+::-moz-placeholder {
+	text-transform: initial;
+}
+:-ms-input-placeholder {
+	text-transform: initial;
+}
+.alert_message{
+	border: 1px solid rgba(179, 41, 0, 0.2);
+	background-color: #fb8c0026;
+	color: #fb8c00;
+	border-radius: 0;
+	padding: 1rem;
+}
