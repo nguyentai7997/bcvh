@@ -6,58 +6,62 @@
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<title>Vietlott</title>
-	<link rel="icon" href="<?= base_url()?>assets2/images/vietlott_icon.png">
+	<link rel="icon" href="<?= base_url()?>assets/images/vietlott_icon.png">
 
-	<link href="<?= base_url()?>assets2/css/bootstrap.min.css" rel="stylesheet" type="text/css">
-	<link href="<?= base_url()?>assets2/css/brain-theme.css" rel="stylesheet" type="text/css">
-	<link href="<?= base_url()?>assets2/css/styles.css" rel="stylesheet" type="text/css">
-	<link href="<?= base_url()?>assets2/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+	<link href="<?= base_url()?>assets/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+	<link href="<?= base_url()?>assets/css/brain-theme.css" rel="stylesheet" type="text/css">
+	<link href="<?= base_url()?>assets/css/styles.css" rel="stylesheet" type="text/css">
+	<link href="<?= base_url()?>assets/css/font-awesome.min.css" rel="stylesheet" type="text/css">
 	<link href='https://fonts.googleapis.com/css?family=Cuprum' rel='stylesheet' type='text/css'>
-	<link href="<?= base_url()?>assets2/css/main.css" rel="stylesheet" type="text/css">
-	<link href="<?= base_url()?>assets2/css/customize.css" rel="stylesheet" type="text/css">
+<!--	<link href="--><?//= base_url()?><!--assets/css/main.css" rel="stylesheet" type="text/css">-->
+<!--	Nguyen Tai' css-->
+	<link href="<?= base_url()?>assets/css/customize.css" rel="stylesheet" type="text/css">
 
-	<script type="text/javascript" src="<?= base_url()?>assets2/ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
-	<script type="text/javascript" src="<?= base_url()?>assets2/ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/jquery-ui.min.js"></script>
+<!--	Thư viện chọn ngày-->
+	<script type="text/javascript" src="https://cdn.jsdelivr.net/jquery/latest/jquery.min.js"></script>
+	<script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+	<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+	<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
 
-	<script type="text/javascript" src="<?= base_url()?>assets2/js/plugins/charts/flot.js"></script>
-	<script type="text/javascript" src="<?= base_url()?>assets2/js/plugins/charts/flot.orderbars.js"></script>
-	<script type="text/javascript" src="<?= base_url()?>assets2/js/plugins/charts/flot.pie.js"></script>
-	<script type="text/javascript" src="<?= base_url()?>assets2/js/plugins/charts/flot.time.js"></script>
-	<script type="text/javascript" src="<?= base_url()?>assets2/js/plugins/charts/flot.animator.min.js"></script>
-	<script type="text/javascript" src="<?= base_url()?>assets2/js/plugins/charts/excanvas.min.js"></script>
-	<script type="text/javascript" src="<?= base_url()?>assets2/js/plugins/charts/flot.resize.min.js"></script>
 
-	<script type="text/javascript" src="<?= base_url()?>assets2/js/plugins/forms/uniform.min.js"></script>
-	<script type="text/javascript" src="<?= base_url()?>assets2/js/plugins/forms/select2.min.js"></script>
-	<script type="text/javascript" src="<?= base_url()?>assets2/js/plugins/forms/inputmask.js"></script>
-	<script type="text/javascript" src="<?= base_url()?>assets2/js/plugins/forms/autosize.js"></script>
-	<script type="text/javascript" src="<?= base_url()?>assets2/js/plugins/forms/inputlimit.min.js"></script>
-	<script type="text/javascript" src="<?= base_url()?>assets2/js/plugins/forms/listbox.js"></script>
-	<script type="text/javascript" src="<?= base_url()?>assets2/js/plugins/forms/multiselect.js"></script>
-	<script type="text/javascript" src="<?= base_url()?>assets2/js/plugins/forms/validate.min.js"></script>
-	<script type="text/javascript" src="<?= base_url()?>assets2/js/plugins/forms/tags.min.js"></script>
-
-	<script type="text/javascript" src="<?= base_url()?>assets2/js/plugins/forms/uploader/plupload.full.min.js"></script>
-	<script type="text/javascript" src="<?= base_url()?>assets2/js/plugins/forms/uploader/plupload.queue.min.js"></script>
-
-	<script type="text/javascript" src="<?= base_url()?>assets2/js/plugins/forms/wysihtml5/wysihtml5.min.js"></script>
-	<script type="text/javascript" src="<?= base_url()?>assets2/js/plugins/forms/wysihtml5/toolbar.js"></script>
-
-	<script type="text/javascript" src="<?= base_url()?>assets2/js/plugins/interface/jgrowl.min.js"></script>
-	<script type="text/javascript" src="<?= base_url()?>assets2/js/plugins/interface/datatables.min.js"></script>
-	<script type="text/javascript" src="<?= base_url()?>assets2/js/plugins/interface/prettify.js"></script>
-	<script type="text/javascript" src="<?= base_url()?>assets2/js/plugins/interface/fancybox.min.js"></script>
-	<script type="text/javascript" src="<?= base_url()?>assets2/js/plugins/interface/colorpicker.js"></script>
-	<script type="text/javascript" src="<?= base_url()?>assets2/js/plugins/interface/timepicker.min.js"></script>
-	<script type="text/javascript" src="<?= base_url()?>assets2/js/plugins/interface/fullcalendar.min.js"></script>
-	<script type="text/javascript" src="<?= base_url()?>assets2/js/plugins/interface/collapsible.min.js"></script>
-
-	<script type="text/javascript" src="<?= base_url()?>assets2/js/bootstrap.min.js"></script>
-	<script type="text/javascript" src="<?= base_url()?>assets2/js/application.js"></script>
-
-	<script type="text/javascript" src="<?= base_url()?>assets2/js/charts/simple_graph.js"></script>
-<!--	NguyenTai's js-->
-	<script type="text/javascript" src="<?= base_url()?>assets2/js/main.js"></script>
+<!--	<script type="text/javascript" src="--><?//= base_url()?><!--assets/ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>-->
+<!--	<script type="text/javascript" src="--><?//= base_url()?><!--assets/ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/jquery-ui.min.js"></script>-->
+<!---->
+	<script type="text/javascript" src="<?= base_url()?>assets/js/plugins/forms/uniform.min.js"></script>
+	<script type="text/javascript" src="<?= base_url()?>assets/js/plugins/forms/select2.min.js"></script>
+	<script type="text/javascript" src="<?= base_url()?>assets/js/plugins/forms/inputmask.js"></script>
+	<script type="text/javascript" src="<?= base_url()?>assets/js/plugins/forms/autosize.js"></script>
+	<script type="text/javascript" src="<?= base_url()?>assets/js/plugins/forms/inputlimit.min.js"></script>
+	<script type="text/javascript" src="<?= base_url()?>assets/js/plugins/forms/listbox.js"></script>
+	<script type="text/javascript" src="<?= base_url()?>assets/js/plugins/forms/multiselect.js"></script>
+	<script type="text/javascript" src="<?= base_url()?>assets/js/plugins/forms/validate.min.js"></script>
+	<script type="text/javascript" src="<?= base_url()?>assets/js/plugins/forms/tags.min.js"></script>
+<!---->
+	<script type="text/javascript" src="<?= base_url()?>assets/js/plugins/forms/uploader/plupload.full.min.js"></script>
+	<script type="text/javascript" src="<?= base_url()?>assets/js/plugins/forms/uploader/plupload.queue.min.js"></script>
+<!---->
+	<script type="text/javascript" src="<?= base_url()?>assets/js/plugins/forms/wysihtml5/wysihtml5.min.js"></script>
+	<script type="text/javascript" src="<?= base_url()?>assets/js/plugins/forms/wysihtml5/toolbar.js"></script>
+<!---->
+	<script type="text/javascript" src="<?= base_url()?>assets/js/plugins/interface/jgrowl.min.js"></script>
+	<script type="text/javascript" src="<?= base_url()?>assets/js/plugins/interface/datatables.min.js"></script>
+	<script type="text/javascript" src="<?= base_url()?>assets/js/plugins/interface/prettify.js"></script>
+	<script type="text/javascript" src="<?= base_url()?>assets/js/plugins/interface/fancybox.min.js"></script>
+	<script type="text/javascript" src="<?= base_url()?>assets/js/plugins/interface/colorpicker.js"></script>
+	<script type="text/javascript" src="<?= base_url()?>assets/js/plugins/interface/timepicker.min.js"></script>
+	<script type="text/javascript" src="<?= base_url()?>assets/js/plugins/interface/fullcalendar.min.js"></script>
+	<script type="text/javascript" src="<?= base_url()?>assets/js/plugins/interface/collapsible.min.js"></script>
+<!---->
+	<script type="text/javascript" src="<?= base_url()?>assets/js/bootstrap.min.js"></script>
+	<script type="text/javascript" src="<?= base_url()?>assets/js/application.js"></script>
+<!---->
+	<script type="text/javascript" src="<?= base_url()?>assets/js/main.js"></script>
+	<!--	NguyenTai's js-->
+	<script type="text/javascript" src="<?= base_url()?>assets/js/bcvh.js"></script>
+	<script type="text/javascript" src="<?= base_url()?>assets/js/problem.js"></script>
+	<!-- Thu vien thong bao -->
+	<link rel="stylesheet" href="<?= base_url()?>assets/css/toastr.min.css">
+	<script src="<?= base_url()?>assets/js/toastr.min.js"></script>
 
 	<style>
 
@@ -68,143 +72,171 @@
 			font-size: 14px;
 		}
 
-		#calendar {
-			max-width: 1100px;
-			margin: 0 auto;
+		.daterangepicker.ltr.show-calendar.openscenter{
+			top: 140px !important;
 		}
 
 	</style>
+
 </head>
 
-<body>
+<body class="wysihtml5-supported">
 
 <?php include("header_view.php") ?>
+<?php echo '<pre>';
+var_dump($_SESSION['user']);
+echo '</pre>';
+?>
 
 <!-- Page container -->
 <div class="page-container container-fluid">
 
-	<!-- Sidebar -->
-	<div class="sidebar collapse">
-		<ul class="navigation">
-			<li class=""><a href="<?= base_url()?>admin/dashboard"><i class="fa fa-laptop"></i> Bảng điều khiển</a></li>
-			<li class="active"><a href="<?= base_url()?>admin/problem"><i class="fa fa-table"></i> Danh sách sự cố</a></li>
-			<li class=""><a href="<?= base_url()?>admin/user"><i class="fa fa fa-tasks"></i> Phân quyền</a></li>
-		</ul>
-	</div>
-	<!-- /sidebar -->
-
+	<?php include("sidebar_view.php") ?>
 
 	<!-- Page content -->
 	<div class="page-content">
 
 		<!-- Page title -->
 		<div class="page-title">
-			<h5><i class="fa fa-table"></i> Danh sách sự cố </h5>
+			<h5><i class="fa fa-table"></i> Danh sách sự cố</h5>
+			<?php if ($_SESSION['user']['role'] == 3 || $_SESSION['user']['role'] == 1){ ?>
 			<div class="btn-group">
 				<a href="#" class="btn btn-link btn-lg btn-icon dropdown-toggle" data-toggle="dropdown"><i class="fa fa-cogs"></i><span class="caret"></span></a>
 				<ul class="dropdown-menu dropdown-menu-right">
-					<li><a href="#">Action</a></li>
-					<li><a href="#">Another action</a></li>
-					<li><a href="#">Something else here</a></li>
-					<li><a href="#">One more line</a></li>
+					<li><a href="<?= base_url()?>addProblem">Thêm mới sự cố</a></li>
 				</ul>
 			</div>
+			<?php } ; ?>
 		</div>
 		<!-- /page title -->
 
-		<!-- Datatable with custom sortable columns -->
+		<!-- Basic inputs -->
 		<div class="panel panel-default">
-			<div class="panel-heading"><h6 class="panel-title"><i class="icon-table"></i> Custom columns sorting</h6></div>
-			<div class="datatable-custom-sort">
-				<table class="table">
+			<!-- Form components -->
+			<div class="panel-body">
+				<div class="form-group">
+					<div class="row">
+						<form class="form-horizontal" role="form" action="<?= base_url()?>search_result" enctype="multipart/form-data" method="post">
+							<div class="col-md-3">
+								<input type="text" class="form-control keyword" name="keyword" placeholder="Điền từ khoá lọc...">
+							</div>
+
+							<div class="col-md-3">
+								<input type="text" class="form-control dates" placeholder="Từ ngày đến ngày" name="datefilter" value="">
+							</div>
+
+							<div class="col-md-3">
+								<select class="form-control software" name="software">
+									<option value="" selected>Chọn một phần mềm...</option>
+									<?php foreach ($dataSoftware as $key => $value) { ?>
+										<option value="<?php echo $value['id_software'];?>"><?php echo $value['software'];?></option>
+									<?php } ?>
+								</select>
+							</div>
+
+							<div class="col-md-3 text-right">
+								<button type="submit" class="btn btn-info search" name="submit">Tìm kiếm</button>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+
+			<!-- Default modal -->
+			<div class="table-responsive">
+				<table class="table table-hover">
 					<thead>
 					<tr>
+						<th>STT</th>
 						<th>Phần mềm</th>
-						<th>Nội dung sự cố</th>
+						<th style="width: 50%">Nội dung sự cố</th>
 						<th>Thời gian</th>
-						<th>Trạng thái</th>
-						<th>Dẫn chứng</th>
-						<th>Công cụ</th>
+						<th class="text-center">Chức năng</th>
 					</tr>
 					</thead>
-					<tbody>
+					<tbody class="data">
+					<?php foreach ($dataProblem as $key => $value) { ?>
 					<tr>
-						<td>1</td>
-						<td>Mark</td>
-						<td>Otto</td>
-						<td>@mdo</td>
+						<td><?php echo $key+1;?></td>
+						<td><?php echo $value['software'];?></td>
+						<td><?php echo $value['problem_detail'];?></td>
+						<td><?php echo $value['time_start'];?></td>
+
+						<td>
+							<div class="table-controls">
+								<button class="btn btn-info btn-icon btn-xs tip" title="Xem">
+									<i class="fa fa-eye viewEvent" aria-hidden="true">
+										<input type="text" value="<?php echo $value['id_problem']?>" class="sr-only">
+									</i>
+								</button>
+								<?php if ($_SESSION['user']['role'] == 3 || $_SESSION['user']['role'] == 1){ ?>
+								<a href="<?= base_url().'editProlem/'.$value['id_problem']?>" class="btn btn-success btn-icon btn-xs tip" title="Sửa"><i class="fa fa-pencil"></i></a>
+								<button class="btn btn-danger btn-icon btn-xs tip" title="Xoá">
+									<i class="fa fa-trash-o deleteProblem" aria-hidden="true">
+										<input type="text" value="<?php echo $value['id_problem']?>" class="sr-only">
+									</i>
+								</button>
+								<?php } ; ?>
+							</div>
+						</td>
 					</tr>
-					<tr>
-						<td>2</td>
-						<td>Jacob</td>
-						<td>Thornton</td>
-						<td>@fat</td>
-					</tr>
-					<tr>
-						<td>3</td>
-						<td>Larry</td>
-						<td>the Bird</td>
-						<td>@twitter</td>
-					</tr>
-					<tr>
-						<td>1</td>
-						<td>Mark</td>
-						<td>Otto</td>
-						<td>@mdo</td>
-					</tr>
-					<tr>
-						<td>2</td>
-						<td>Jacob</td>
-						<td>Thornton</td>
-						<td>@fat</td>
-					</tr>
-					<tr>
-						<td>3</td>
-						<td>Larry</td>
-						<td>the Bird</td>
-						<td>@twitter</td>
-					</tr>
-					<tr>
-						<td>1</td>
-						<td>Mark</td>
-						<td>Otto</td>
-						<td>@mdo</td>
-					</tr>
-					<tr>
-						<td>2</td>
-						<td>Jacob</td>
-						<td>Thornton</td>
-						<td>@fat</td>
-					</tr>
-					<tr>
-						<td>3</td>
-						<td>Larry</td>
-						<td>the Bird</td>
-						<td>@twitter</td>
-					</tr>
-					<tr>
-						<td>1</td>
-						<td>Mark</td>
-						<td>Otto</td>
-						<td>@mdo</td>
-					</tr>
-					<tr>
-						<td>2</td>
-						<td>Jacob</td>
-						<td>Thornton</td>
-						<td>@fat</td>
-					</tr>
-					<tr>
-						<td>3</td>
-						<td>Larry</td>
-						<td>the Bird</td>
-						<td>@twitter</td>
-					</tr>
+					<?php } ?>
 					</tbody>
 				</table>
+				<div class="table-footer">
+
+					<ul class="pagination">
+						<li><a href="#">Prev</a></li>
+						<li><a href="#">1</a></li>
+						<li><a href="#">2</a></li>
+						<li class="page-item active" onclick="getPage(this)"><a href="#">3</a></li>
+						<li><a href="#">4</a></li>
+						<li><a href="#">Next</a></li>
+					</ul>
+				</div>
+			</div>
+		<!-- /basic inputs -->
+		</div>
+
+		<div id="default_modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="false" style="display: none;background: rgb(0 0 0 / 50%);">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close close-modal" data-dismiss="modal" aria-hidden="true">&times;</button>
+						<h5 class="modal-title">Chi tiết sự cố</h5>
+					</div>
+
+					<div class="modal-body has-padding modal-view"></div>
+
+					<div class="modal-footer">
+						<button type="button" class="btn btn-primary close-modal" data-dismiss="modal">Đóng</button>
+					</div>
+				</div>
 			</div>
 		</div>
-		<!-- /datatable with custom sortable columns -->
+		<!-- /default modal -->
+
+		<!-- Small modal -->
+		<div id="small_modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="false" style="display: none;background: rgb(0 0 0 / 50%);">
+			<div class="modal-dialog modal-sm">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close close-modal" data-dismiss="modal" aria-hidden="true">&times;</button>
+						<h5 class="modal-title">Xoá sự cố</h5>
+					</div>
+
+					<div class="modal-body has-padding modal-delete">
+						<p>Bạn có chắc chắn muốn xoá không?</p>
+					</div>
+
+					<div class="modal-footer">
+						<button class="btn btn-warning close-modal" data-dismiss="modal">Không</button>
+						<button class="btn btn-primary btnDelete">Có</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- /small modal -->
 
 		<?php include("footer_view.php") ?>
 
