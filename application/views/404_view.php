@@ -69,16 +69,7 @@
 
 <!-- Page container -->
 <div class="page-container container-fluid">
-	<!-- Sidebar -->
-	<div class="sidebar collapse">
-		<ul class="navigation">
-			<li class=""><a href="<?= base_url()?>"><i class="fa fa-calendar"></i> Tổng quan</a></li>
-			<li class=""><a href="<?= base_url()?>problem"><i class="fa fa-table"></i> Sự cố</a></li>
-			<li class=""><a href="<?= base_url()?>report"><i class="fa fa-file-text"></i> Báo cáo tổng hợp</a></li>
-			<li class=""><a href="<?= base_url()?>user"><i class="fa fa fa-user"></i> Người dùng</a></li>
-		</ul>
-	</div>
-	<!-- /sidebar -->
+	<?php include("sidebar_view.php") ?>
 
 	<!-- Page content -->
 	<div class="page-content">

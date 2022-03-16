@@ -40,14 +40,14 @@ $(document).ready(function(){
 		}
 
 		$.ajax({
-			url: 'http://localhost:8012/bcvh/check_sign_in',
+			url: 'http://10.96.3.52:8012/bcvh/check_sign_in',
 			type: 'post',
 			data: {
 				usernameSignIn	: usernameSignIn,
 				passwordSignIn	: passwordSignIn
 			},success:function(res) {
 				if(res == 0) {
-					window.location.href = 'http://localhost:8012/bcvh';
+					window.location.href = 'http://10.96.3.52:8012/bcvh';
 				} else {
 					toastr.error('Thông tin đăng nhập không chính xác, vui lòng thử lại.');
 				}

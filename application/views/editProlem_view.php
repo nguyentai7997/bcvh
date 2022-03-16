@@ -52,6 +52,7 @@
 
 	<!--	NguyenTai's js-->
 	<script type="text/javascript" src="<?= base_url()?>assets/js/bcvh.js"></script>
+	<script type="text/javascript" src="<?= base_url()?>assets/js/problem.js"></script>
 
 	<style>
 

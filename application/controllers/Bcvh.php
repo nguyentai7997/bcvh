@@ -12,13 +12,13 @@ class Bcvh extends CI_Controller
 
 	public function index()
 	{
-		redirect('http://localhost:8012/bcvh/dashboard');
+		redirect('http://10.96.3.52:8012/bcvh/dashboard');
 	}
 
 	public function dashboard()
 	{
 		if (empty($_SESSION['user'])) {
-			redirect('http://localhost:8012/bcvh/login');
+			redirect('http://10.96.3.52:8012/bcvh/login');
 		} else {
 			$this->load->view('dashboard_view');
 		}
@@ -51,7 +51,7 @@ class Bcvh extends CI_Controller
 				echo $status;
 			}
 		} else{
-			redirect('http://localhost:8012/bcvh/error');
+			redirect('http://10.96.3.52:8012/bcvh/error');
 		}
 	}
 
@@ -68,7 +68,7 @@ class Bcvh extends CI_Controller
 				echo json_encode($events);
 			}
 		} else {
-			redirect('http://localhost:8012/bcvh/error');
+			redirect('http://10.96.3.52:8012/bcvh/error');
 		}
 	}
 
@@ -79,82 +79,150 @@ class Bcvh extends CI_Controller
 			$events = $this->Mbcvh->getDataProblemByIdProblem($idEvent);
 			echo json_encode($events);
 		} else {
-			redirect('http://localhost:8012/bcvh/error');
+			redirect('http://10.96.3.52:8012/bcvh/error');
 		}
 	}
 
 	public function problem()
 	{
+		$limit = 5;//so luong ban ghi
+		$offset = 0;//vi tr bat dau lay du lieu
 		//Check role hien thi event theo user role 3
 		if ($_SESSION['user']['role'] == 3){
 			$idUser = $_SESSION['user']['id_user'];//Lay id theo Session user
-			$dataProblem = $this->Mbcvh->getDataProblemByIdUser($idUser);
+			$dataProblem = $this->Mbcvh->getDataProblemByIdUser($idUser);//dung de tinh so Page can co
+			$dataProblemOffset = $this->Mbcvh->getDataProblemByOffsetAndIdUser($offset,$limit,$idUser);
 			$dataSoftware = $this->Mbcvh->getSoftwareByIdUser($idUser);
-			$this->load->view('problem_view',['dataProblem' => $dataProblem,'dataSoftware' => $dataSoftware]);
+			$countPage=ceil(count($dataProblem)/$limit);
+			$this->load->view('problem_view',['dataProblem' => $dataProblemOffset,'dataSoftware' => $dataSoftware,'countPage'=>$countPage]);
 		} else {
-			$dataProblem = $this->Mbcvh->getAllDataProblem();
+			$dataProblem = $this->Mbcvh->getAllDataProblem();//dung de tinh so Page can co
+			$dataProblemOffset = $this->Mbcvh->getDataProblemByOffset($offset,$limit);
 			$dataSoftware = $this->Mbcvh->getAllSoftware();
-			$this->load->view('problem_view',['dataProblem' => $dataProblem,'dataSoftware' => $dataSoftware]);
+			$countPage=ceil(count($dataProblem)/$limit);
+			$this->load->view('problem_view',['dataProblem' => $dataProblemOffset,'dataSoftware' => $dataSoftware,'countPage'=>$countPage]);
 		}
 	}
 
 	public function pagination_problem()
 	{
-		if ($this->input->post('pageNumber')){
-			$pageNumber = $this->input->post('pageNumber');
-			$limit = 10;//số lượng bản ghi
-			$offset=($pageNumber - 1) * $limit; //vị trí bắt đầu lấy dữ liệu
-			$dataProblemOffSet = $this->Mbcvh->getDataProblemByOffset($offset,$limit);
-
-			$allData = array();
-			for ($i = 0; $i < count($dataProblemOffSet); $i++) {
-				$dataPublicname = $this->Mteemarket->getPublicnameByIdCamp($dataCampOffSet[$i]['id']);
-				$firstImageLinkOfCampaign = $this->Mteemarket->getFirstImageLinkByIdCampaign($dataCampOffSet[$i]['id']);
-				$data = ['image_link' => $firstImageLinkOfCampaign, 'price' => $dataCampOffSet[$i]['price'], 'url' => $dataCampOffSet[$i]['url'], 'title' => $dataCampOffSet[$i]['title'], 'publicname' => $dataPublicname[0]['publicname']];
-				array_push($allData, $data);
+		if ($this->input->post('pageNumber')) {
+			if ($_SESSION['user']['role'] == 3) {//Nguoi quan ly phan mem
+				$idUser = $_SESSION['user']['id_user'];
+				$pageNumber = $this->input->post('pageNumber');
+				$limit = 5;//số lượng bản ghi
+				$offset = ($pageNumber - 1) * $limit; //vị trí bắt đầu lấy dữ liệu
+				$dataProblemOffSet = $this->Mbcvh->getDataProblemByOffsetAndIdUser($offset,$limit,$idUser);
+				$role[0] = $_SESSION['user']['role'];
+				$result = array_merge($role, $dataProblemOffSet);
+				echo json_encode($result);
+			} else {//Admin and viewer
+				$pageNumber = $this->input->post('pageNumber');
+				$limit = 5;//số lượng bản ghi
+				$offset = ($pageNumber - 1) * $limit; //vị trí bắt đầu lấy dữ liệu
+				$dataProblemOffSet = $this->Mbcvh->getDataProblemByOffset($offset,$limit);
+				$role[0] = $_SESSION['user']['role'];
+				$result = array_merge($role, $dataProblemOffSet);
+				echo json_encode($result);
 			}
-			echo json_encode($allData);
 		} else {
-			redirect('http://localhost:8012/teemarket/error');
+			redirect('http://10.96.3.52:8012/bcvh/error');
 		}
 	}
 
 	public function search_result()
 	{
 		if (!isset($_POST["submit"])){
-			redirect('http://localhost:8012/bcvh/error');
-		}else {
-			$keyword = $_POST['keyword'];
-			$dates = $_POST['datefilter'];
-			$id_software = $_POST['software'];
-			if (!isset($_POST["datefilter"])){
-				$arrayDate = explode(" - ",$dates);
-				$startDate = $arrayDate[0];
-				$endDate = $arrayDate[1];
-				$time_start = date("Y-m-d", strtotime($startDate));
-				$time_end = date("Y-m-d", strtotime($endDate));
-			} else {
-				$time_start ='';
-				$time_end ='';
-			}
+			redirect('http://10.96.3.52:8012/bcvh/problem');
+		} else {
+			$limit = 5;//so luong ban ghi
+			$offset = 0;//vi tr bat dau lay du lieu
+			if ($_POST['keyword'] == '' && $_POST['datefilter'] == null && $_POST['software'] == ''){
+				$keyword = $_POST['keyword'];
+				$id_software = $_POST['software'];
+				$startDate = '';
+				$endDate = '';
 
-//			var_dump($array);
-//			die();
-//			echo $startDate;
-//			echo $endDate;
-//			die();
+				//Check role hien thi event theo user role 3
+				if ($_SESSION['user']['role'] == 3){
+					$idUser = $_SESSION['user']['id_user'];//Lay id theo Session user
+					$dataProblem = $this->Mbcvh->getDataProblemByIdUser($idUser);//dung de tinh so Page can co
+					$dataProblemOffset = $this->Mbcvh->getDataProblemByOffsetAndIdUser($offset,$limit,$idUser);
+					$dataSoftware = $this->Mbcvh->getSoftwareByIdUser($idUser);
+					$countPage=ceil(count($dataProblem)/$limit);
+					$this->load->view('search_result_view',['dataProblem' => $dataProblemOffset,'dataSoftware' => $dataSoftware,'countPage'=>$countPage,'keyword'=>$keyword,'startDate'=>$startDate,'endDate'=>$endDate,'id_software'=>$id_software]);
+				} else {
+					$dataProblem = $this->Mbcvh->getAllDataProblem();//dung de tinh so Page can co
+					$dataProblemOffset = $this->Mbcvh->getDataProblemByOffset($offset,$limit);
+					$dataSoftware = $this->Mbcvh->getAllSoftware();
+					$countPage=ceil(count($dataProblem)/$limit);
+					$this->load->view('search_result_view',['dataProblem' => $dataProblemOffset,'dataSoftware' => $dataSoftware,'countPage'=>$countPage,'keyword'=>$keyword,'startDate'=>$startDate,'endDate'=>$endDate,'id_software'=>$id_software]);
+				}
+			} else {//1 trong 3 trường có dữ liệu
+				$keyword = $_POST['keyword'];
+				$id_software = $_POST['software'];
+				$dates = $_POST['datefilter'];
+				$startDate = '';
+				$endDate = '';
+				$time_start = '';
+				$time_end = '';
+				if ($dates != null) {
+					$arrayDate = explode(" - ",$dates);
+					$startDate = $arrayDate[0];
+					$endDate = $arrayDate[1];
+					$time_start = date("Y-m-d", strtotime($startDate));
+					$time_end = date("Y-m-d", strtotime($endDate));
+				}
 
-			//Check role hien thi event theo user role 3
-			if ($_SESSION['user']['role'] == 3) {
-				$idUser = $_SESSION['user']['id_user'];//Lay id theo Session user
-				$dataProblem = $this->Mbcvh->getDataSeachProblemByIdUser($idUser,$keyword,$time_start,$time_end,$id_software);
-				$dataSoftware = $this->Mbcvh->getSoftwareByIdUser($idUser);
-				$this->load->view('search_result_view', ['dataProblem' => $dataProblem,'dataSoftware' => $dataSoftware]);
-			} else {
-				$dataProblem = $this->Mbcvh->getDataSeachProblem($keyword,$time_start,$time_end,$id_software);
-				$dataSoftware = $this->Mbcvh->getAllSoftware();
-				$this->load->view('search_result_view', ['dataProblem' => $dataProblem,'dataSoftware' => $dataSoftware]);
+				//Check role hien thi event theo user role 3
+				if ($_SESSION['user']['role'] == 3) {
+					$idUser = $_SESSION['user']['id_user'];//Lay id theo Session user
+					$dataProblem = $this->Mbcvh->getDataSeachProblemByIdUser($idUser,$keyword,$time_start,$time_end,$id_software);//dung de tinh so Page can co
+					$dataProblemOffSet = $this->Mbcvh->getDataSearchProblemByOffsetAndIdUser($offset,$limit,$idUser,$keyword,$time_start,$time_end,$id_software);
+					$dataSoftware = $this->Mbcvh->getSoftwareByIdUser($idUser);
+					$countPage=ceil(count($dataProblem)/$limit);
+					$this->load->view('search_result_view', ['dataProblem' => $dataProblemOffSet,'dataSoftware' => $dataSoftware,'countPage'=>$countPage,'keyword'=>$keyword,'startDate'=>$startDate,'endDate'=>$endDate,'id_software'=>$id_software]);
+				} else {
+					$dataProblem = $this->Mbcvh->getDataSeachProblem($keyword,$time_start,$time_end,$id_software);//dung de tinh so Page can co
+					$dataProblemOffSet = $this->Mbcvh->getDataSearchProblemByOffset($offset,$limit,$keyword,$time_start,$time_end,$id_software);
+					$dataSoftware = $this->Mbcvh->getAllSoftware();
+					$countPage=ceil(count($dataProblem)/$limit);
+					$this->load->view('search_result_view', ['dataProblem' => $dataProblemOffSet,'dataSoftware' => $dataSoftware,'countPage'=>$countPage,'keyword'=>$keyword,'startDate'=>$startDate,'endDate'=>$endDate,'id_software'=>$id_software]);
+				}
 			}
+		}
+	}
+
+	public function pagination_search_problem()
+	{
+		if ($this->input->post('pageNumber')) {
+			$keyword =  $this->input->post('keyword');
+			$startDate = $this->input->post('startDate');
+			$endDate = $this->input->post('endDate');
+			$id_software = $this->input->post('id_software');
+			$time_start = date("Y-m-d", strtotime($startDate));
+			$time_end = date("Y-m-d", strtotime($endDate));
+
+			if ($_SESSION['user']['role'] == 3) {//Nguoi quan ly phan mem
+				$idUser = $_SESSION['user']['id_user'];
+				$pageNumber = $this->input->post('pageNumber');
+				$limit = 5;//số lượng bản ghi
+				$offset = ($pageNumber - 1) * $limit; //vị trí bắt đầu lấy dữ liệu
+				$dataProblemOffSet = $this->Mbcvh->getDataSeachProblemByIdUser($idUser,$keyword,$time_start,$time_end,$id_software);
+				$role[0] = $_SESSION['user']['role'];
+				$result = array_merge($role, $dataProblemOffSet);
+				echo json_encode($result);
+			} else {//Admin and viewer
+				$pageNumber = $this->input->post('pageNumber');
+				$limit = 5;//số lượng bản ghi
+				$offset = ($pageNumber - 1) * $limit; //vị trí bắt đầu lấy dữ liệu
+				$dataProblemOffSet = $this->Mbcvh->getDataSearchProblemByOffset($offset,$limit,$keyword,$time_start,$time_end,$id_software);
+				$role[0] = $_SESSION['user']['role'];
+				$result = array_merge($role, $dataProblemOffSet);
+				echo json_encode($result);
+			}
+		} else {
+			redirect('http://10.96.3.52:8012/bcvh/error');
 		}
 	}
 
@@ -166,7 +234,7 @@ class Bcvh extends CI_Controller
 			$softwareByIdUser = $this->Mbcvh->getSoftwareByIdUser($idUser);
 			$this->load->view('addProblem_view',['software' => $softwareByIdUser]);
 		} elseif ($_SESSION['user']['role'] == 2) {
-			redirect('http://localhost:8012/bcvh/error');
+			redirect('http://10.96.3.52:8012/bcvh/error');
 		} else {
 			$software = $this->Mbcvh->getAllSoftware();
 			$this->load->view('addProblem_view',['software' => $software]);
@@ -176,7 +244,7 @@ class Bcvh extends CI_Controller
 	public function insertProblem()
 	{
 		if (!isset($_POST["submit"])){
-			redirect('http://localhost:8012/bcvh/error');
+			redirect('http://10.96.3.52:8012/bcvh/error');
 		}else{
 			//Lay id theo Session user
 			$idUser = $_SESSION['user']['id_user'];
@@ -188,11 +256,12 @@ class Bcvh extends CI_Controller
 
 			// File upload path
 			$targetDir = "uploads/";
-			$fileName = basename($_FILES["file"]["name"]);
+			$file = 'image_' . date('Y-m-d-H-i-s') . '_' . uniqid() . basename($_FILES["file"]["name"]);
+			$fileName = strtolower($file);
 			$targetFilePath = $targetDir . $fileName;
 			$fileType = pathinfo($targetFilePath,PATHINFO_EXTENSION);
 
-			if(!empty($_FILES["file"]["name"])){
+			if(!empty($_FILES["file"]["name"])){//Nếu có ảnh
 				// Allow certain file formats
 				$allowTypes = array('jpg','png','jpeg');
 				if(in_array($fileType, $allowTypes)){
@@ -205,8 +274,8 @@ class Bcvh extends CI_Controller
 							// Insert image file name into database
 							$insert = $this->Mbcvh->insertProblem($idSoftware,$idUser,$problemDetail,$solution,$fileName,$dateStart,$dateEnd);
 							if($insert){
-//								$statusMsg = "The file ".$fileName. " has been uploaded successfully.";
-								redirect('http://localhost:8012/bcvh/problem');
+								//$statusMsg = "The file ".$fileName. " has been uploaded successfully.";
+								redirect('http://10.96.3.52:8012/bcvh/problem');
 							}else{
 								$statusMsg = "File upload failed, please try again.";
 							}
@@ -220,7 +289,6 @@ class Bcvh extends CI_Controller
 			}else{
 				$statusMsg = 'Please select a file to upload.';
 			}
-
 			// Display status message
 			echo $statusMsg;
 		}
@@ -236,7 +304,7 @@ class Bcvh extends CI_Controller
 		} elseif ($_SESSION['user']['role'] == 1) {
 			$software = $this->Mbcvh->getAllSoftware();
 		} else {
-			redirect('http://localhost:8012/bcvh/error');
+			redirect('http://10.96.3.52:8012/bcvh/error');
 		}
 		$this->load->view('editProlem_view',['problem' => $problem,'software' => $software]);
 	}
@@ -244,7 +312,7 @@ class Bcvh extends CI_Controller
 	public function updateProblem($id_problem)
 	{
 		if (!isset($_POST["submit"])){
-			redirect('http://localhost:8012/bcvh/error');
+			redirect('http://10.96.3.52:8012/bcvh/error');
 		}else{
 			//Lay id theo Session user
 			$idUser = $_SESSION['user']['id_user'];
@@ -256,7 +324,8 @@ class Bcvh extends CI_Controller
 
 			// File upload path
 			$targetDir = "uploads/";
-			$fileName = basename($_FILES["file"]["name"]);
+			$file = 'image_' . date('Y-m-d-H-i-s') . '_' . uniqid() . basename($_FILES["file"]["name"]);
+			$fileName = strtolower($file);
 			$targetFilePath = $targetDir . $fileName;
 			$fileType = pathinfo($targetFilePath,PATHINFO_EXTENSION);
 
@@ -273,7 +342,7 @@ class Bcvh extends CI_Controller
 							// Update image file name into database
 							$update = $this->Mbcvh->updateProblem($id_problem,$idSoftware,$idUser,$problemDetail,$solution,$fileName,$dateStart,$dateEnd);
 							if($update){
-								redirect('http://localhost:8012/bcvh/problem');
+								redirect('http://10.96.3.52:8012/bcvh/problem');
 							}else{
 								echo "File upload failed, please try again.";
 							}
@@ -287,7 +356,7 @@ class Bcvh extends CI_Controller
 			}else{
 				$update = $this->Mbcvh->updateProblemNonImage($id_problem,$idSoftware,$idUser,$problemDetail,$solution,$dateStart,$dateEnd);
 				if($update){
-					redirect('http://localhost:8012/bcvh/problem');
+					redirect('http://10.96.3.52:8012/bcvh/problem');
 				}else{
 					echo "Update failed";
 				}
@@ -302,20 +371,21 @@ class Bcvh extends CI_Controller
 			$delete = $this->Mbcvh->updateStatusProblemByIdProblem($idProblem);
 			echo 1;
 		} else {
-			redirect('http://localhost:8012/bcvh/error');
+			redirect('http://10.96.3.52:8012/bcvh/error');
 		}
 	}
 
 	public function report()
 	{
 		$report = $this->Mbcvh->getDataReport();
-		$this->load->view('report_view',['report' => $report]);
+		$year = $this->Mbcvh->getDataYear();
+		$this->load->view('report_view',['report' => $report,'year' => $year]);
 	}
 
 	public function uploadReport()
 	{
 		if (!isset($_POST["submit"])){
-			redirect('http://localhost:8012/bcvh/error');
+			redirect('http://10.96.3.52:8012/bcvh/error');
 		}else{
 			//Lay ngay de insert...
 			date_default_timezone_set("Asia/Ho_Chi_Minh");
@@ -340,7 +410,7 @@ class Bcvh extends CI_Controller
 							// Insert pdf file name into database
 							$insert = $this->Mbcvh->insertReport($fileName,$date);
 							if($insert){
-								redirect('http://localhost:8012/bcvh/report');
+								redirect('http://10.96.3.52:8012/bcvh/report');
 							}else{
 								$statusMsg = "File upload failed, please try again.";
 							}
@@ -360,10 +430,17 @@ class Bcvh extends CI_Controller
 		}
 	}
 
+	public function bgt_report()
+	{
+		$report = $this->Mbcvh->getDataBGTReport();
+		$year = $this->Mbcvh->getDataYear();
+		$this->load->view('bgt_report_view',['report' => $report,'year' => $year]);
+	}
+
 	public function uploadBGTReport()
 	{
 		if (!isset($_POST["submit"])){
-			redirect('http://localhost:8012/bcvh/error');
+			redirect('http://10.96.3.52:8012/bcvh/error');
 		}else{
 			//Lay ngay de insert...
 			date_default_timezone_set("Asia/Ho_Chi_Minh");
@@ -388,7 +465,7 @@ class Bcvh extends CI_Controller
 							// Insert pdf file name into database
 							$insert = $this->Mbcvh->insertBGTReport($fileName,$date);
 							if($insert){
-								redirect('http://localhost:8012/bcvh/bgt_report');
+								redirect('http://10.96.3.52:8012/bcvh/bgt_report');
 							}else{
 								$statusMsg = "File upload failed, please try again.";
 							}
@@ -408,20 +485,12 @@ class Bcvh extends CI_Controller
 		}
 	}
 
-	public function bgt_report()
-	{
-		$report = $this->Mbcvh->getDataBGTReport();
-		$this->load->view('bgt_report_view',['report' => $report]);
-	}
-
-
-
 	public function user()
 	{
 		if ($_SESSION['user']['role'] == 1) {
 			$this->load->view('user_view');
 		} else {
-			redirect('http://localhost:8012/bcvh/error');
+			redirect('http://10.96.3.52:8012/bcvh/error');
 		}
 	}
 
@@ -439,432 +508,7 @@ class Bcvh extends CI_Controller
 	{
 		// Xóa session name
 		unset($_SESSION['user']);
-		redirect('http://localhost:8012/bcvh');
-	}
-
-//	Project cu===========================================
-
-
-
-	public function register()
-	{
-		$dataCategory = $this->Mvhht->getDataCategory();
-		$this->load->view('register_view',['category' => $dataCategory]);
-	}
-
-	public function check_public_name()
-	{
-		if ($this->input->post('publicname')){
-			$publicname = $this->input->post('publicname');
-			$res = $this->Mvhht->getDataByPublicName($publicname);
-			if (!$res) {
-				$status = 0;
-				echo $status;
-			} else {
-				$status = 1;
-				echo $status;
-			}
-		} else{
-			redirect('http://localhost:8012/teemarket/error');
-		}
-	}
-
-	public function check_email()
-	{
-		if ($this->input->post('email')){
-			$email = $this->input->post('email');
-			$res = $this->Mvhht->getDataByEmail($email);
-			if (!$res) {
-				$status = 0;
-				echo $status;
-			} else {
-				$status = 1;
-				echo $status;
-			}
-		} else{
-			redirect('http://localhost:8012/teemarket/error');
-		}
-	}
-
-	public function insert_seller()
-	{
-		if ($this->input->post('fullname')){
-			$account_type = $this->input->post('account_type');
-			$fullname = $this->input->post('fullname');
-			$publicname = $this->input->post('publicname');
-			$email = $this->input->post('email');
-			$password = $this->input->post('password');
-
-			$add = $this->Mvhht->insertSeller($account_type,$fullname, $publicname, $email, $password);
-			if ($add) {
-				$status = 0;
-				echo $status;
-				$seller_info = array(
-					//thieu id de co gi con doi mat khau duoc
-					'publicname' => $publicname,
-					'fullname' => $fullname,
-					'email' => $email
-				);
-				$this->session->set_userdata('user', $seller_info);
-			} else {
-				$status = 1;
-				echo $status;
-			}
-		} else{
-			redirect('http://localhost:8012/teemarket/error');
-		}
-	}
-
-	public function marketplace(){
-		$dataCategory = $this->Mvhht->getDataCategory();
-		$limit = 3;
-		$dataCampaign = $this->Mvhht->getDataCampaign();
-		$dataCampOffSet = $this->Mvhht->getDataCampByOffset(0,$limit);
-		$countPage=ceil(count($dataCampaign)/$limit);
-
-		$allData = array();
-		for ($i = 0; $i < count($dataCampOffSet); $i++) {
-			$dataPublicname = $this->Mvhht->getPublicnameByIdCamp($dataCampOffSet[$i]['id']);
-			$firstImageLinkOfCampaign = $this->Mvhht->getFirstImageLinkByIdCampaign($dataCampOffSet[$i]['id']);
-			$data = ['idCampaign' => $dataCampOffSet[$i]['id'], 'image_link' => $firstImageLinkOfCampaign, 'price' => $dataCampOffSet[$i]['price'], 'url' => $dataCampOffSet[$i]['url'], 'title' => $dataCampOffSet[$i]['title'], 'publicname' => $dataPublicname[0]['publicname']];
-			array_push($allData, $data);
-		}
-
-		$this->load->view('marketplace_view', ['category' => $dataCategory, 'allData' => $allData, 'countPage'=>$countPage]);
-	}
-
-	public function pagination_marketplace()
-	{
-		if ($this->input->post('pageNumber')){
-			$pageNumber = $this->input->post('pageNumber');
-			$limit = 3;
-			$offset=($pageNumber - 1) * $limit;
-			$dataCampOffSet = $this->Mvhht->getDataCampByOffset($offset,$limit);
-
-			$allData = array();
-			for ($i = 0; $i < count($dataCampOffSet); $i++) {
-				$dataPublicname = $this->Mvhht->getPublicnameByIdCamp($dataCampOffSet[$i]['id']);
-				$firstImageLinkOfCampaign = $this->Mvhht->getFirstImageLinkByIdCampaign($dataCampOffSet[$i]['id']);
-				$data = ['image_link' => $firstImageLinkOfCampaign, 'price' => $dataCampOffSet[$i]['price'], 'url' => $dataCampOffSet[$i]['url'], 'title' => $dataCampOffSet[$i]['title'], 'publicname' => $dataPublicname[0]['publicname']];
-				array_push($allData, $data);
-			}
-			echo json_encode($allData);
-		} else {
-			redirect('http://localhost:8012/teemarket/error');
-		}
-	}
-
-	public function category($category)
-	{
-		$dataCategory = $this->Mvhht->getDataCategory();
-
-		$flag = 0;
-		if ($category == 'all') {
-			$flag = 1;
-		}
-		for ($i = 0; $i < count($dataCategory); $i++) {
-			if ($category == $dataCategory[$i]['category']) {
-				$flag = 1;
-			}
-		}
-
-		if ($flag == 0) {
-			redirect('http://localhost:8012/teemarket/error');
-		} else {
-			if ($category == 'all') {
-				$dataCampaign = $this->Mvhht->getDataCampaign();
-				$limit = 3;
-				$dataCampOffSet = $this->Mvhht->getDataCampByOffset(0,$limit);
-				$countPage=ceil(count($dataCampaign)/$limit);
-
-				$allData = array();
-				if ($dataCampOffSet){
-					for ($i = 0; $i < count($dataCampOffSet); $i++) {
-						$dataPublicname = $this->Mvhht->getPublicnameByIdCamp($dataCampOffSet[$i]['id']);
-						$firstImageLinkOfCampaign = $this->Mvhht->getFirstImageLinkByIdCampaign($dataCampOffSet[$i]['id']);
-						$data = ['idCampaign' => $dataCampOffSet[$i]['id'], 'image_link' => $firstImageLinkOfCampaign, 'price' => $dataCampOffSet[$i]['price'], 'url' => $dataCampOffSet[$i]['url'], 'title' => $dataCampOffSet[$i]['title'], 'publicname' => $dataPublicname[0]['publicname'], 'category' => 'all'];
-						array_push($allData, $data);
-					}
-				}
-				$this->load->view('category_view', ['category' => $dataCategory, 'allData' => $allData, 'countPage'=>$countPage]);
-			} else {
-				$idCategory = $this->Mvhht->getIdCategoryByCategory($category);
-				$campCategory = $this->Mvhht->getCampByIdCategory($idCategory[0]['id']);
-				$limit = 3;
-				$dataCampCateOffSet = $this->Mvhht->getDataCampCategoryByOffset(0,$limit,$idCategory[0]['id']);
-				$countPage=ceil(count($campCategory)/$limit);
-
-				$allData = array();
-				if ($dataCampCateOffSet) {
-					for ($i = 0; $i < count($dataCampCateOffSet); $i++) {
-						$dataPublicname = $this->Mvhht->getPublicnameByIdCamp($dataCampCateOffSet[$i]['id']);
-						$firstImageLinkOfCampaign = $this->Mvhht->getFirstImageLinkByIdCampaign($dataCampCateOffSet[$i]['id']);
-						$data = ['idCampaign' => $dataCampCateOffSet[$i]['id'], 'image_link' => $firstImageLinkOfCampaign, 'price' => $dataCampCateOffSet[$i]['price'], 'url' => $dataCampCateOffSet[$i]['url'], 'title' => $dataCampCateOffSet[$i]['title'], 'publicname' => $dataPublicname[0]['publicname'], 'category' => $category];
-						array_push($allData, $data);
-					}
-					$this->load->view('category_view', ['category' => $dataCategory, 'allData' => $allData, 'countPage'=>$countPage]);
-				} else {
-					$this->load->view('category_view', ['category' => $dataCategory,'name_category' => $category, 'countPage'=>$countPage]);
-				}
-			}
-		}
-	}
-
-	public function pagination_category()
-	{
-		if ($this->input->post('pageNumber')){
-			$category = $this->input->post('category');
-			$pageNumber = $this->input->post('pageNumber');
-			$idCategory = $this->Mvhht->getIdCategoryByCategory($category);
-
-			$limit = 3;
-			$offset=($pageNumber - 1) * $limit;
-			if ($category != 'all') {
-				$dataCampCateOffSet = $this->Mvhht->getDataCampCategoryByOffset($offset,$limit,$idCategory[0]['id']);
-			} else {
-				$dataCampCateOffSet = $this->Mvhht->getDataCampByOffset($offset,$limit);
-			}
-
-			$allData = array();
-			for ($i = 0; $i < count($dataCampCateOffSet); $i++) {
-				$dataPublicname = $this->Mvhht->getPublicnameByIdCamp($dataCampCateOffSet[$i]['id']);
-				$firstImageLinkOfCampaign = $this->Mvhht->getFirstImageLinkByIdCampaign($dataCampCateOffSet[$i]['id']);
-				$data = ['image_link' => $firstImageLinkOfCampaign, 'price' => $dataCampCateOffSet[$i]['price'], 'url' => $dataCampCateOffSet[$i]['url'], 'title' => $dataCampCateOffSet[$i]['title'], 'publicname' => $dataPublicname[0]['publicname']];
-				array_push($allData, $data);
-			}
-			echo json_encode($allData);
-		} else {
-			redirect('http://localhost:8012/teemarket/error');
-		}
-	}
-
-//	public function search($request){
-//		$dataCategory = $this->Mvhht->getDataCategory();
-//		$dataSearch = $this->Mvhht->search($request);
-//
-//		$limit = 3;
-//		$dataSearchOffSet = $this->Mvhht->getDataSearchByOffset(0,$limit,$request);
-//		$countPage=ceil(count($dataSearch)/$limit);
-//
-//		$allData = array();
-//		if ($dataSearchOffSet) {
-//			for ($i = 0; $i < count($dataSearchOffSet); $i++) {
-//				$dataPublicname = $this->Mvhht->getPublicnameByIdCamp($dataSearchOffSet[$i]['id']);
-//				$firstImageLinkOfCampaign = $this->Mvhht->getFirstImageLinkByIdCampaign($dataSearchOffSet[$i]['id']);
-//				$data = ['idCampaign' => $dataSearchOffSet[$i]['id'], 'image_link' => $firstImageLinkOfCampaign, 'price' => $dataSearchOffSet[$i]['price'], 'url' => $dataSearchOffSet[$i]['url'], 'title' => $dataSearchOffSet[$i]['title'], 'publicname' => $dataPublicname[0]['publicname']];
-//				array_push($allData, $data);
-//			}
-//			$this->load->view('search_view', ['category' => $dataCategory, 'allData' => $allData,'request'=>$request, 'countPage'=>$countPage]);
-//		} else {
-//			$this->load->view('search_view', ['category' => $dataCategory, 'request'=>$request]);
-//		}
-//
-//	}
-
-	public function pagination_search()
-	{
-		if ($this->input->post('pageNumber')){
-			$request = $this->input->post('request');
-			$pageNumber = $this->input->post('pageNumber');
-
-			$limit = 3;
-			$offset=($pageNumber - 1) * $limit;
-			$dataSearchOffSet = $this->Mvhht->getDataSearchByOffset($offset,$limit,$request);
-
-			$allData = array();
-			for ($i = 0; $i < count($dataSearchOffSet); $i++) {
-				$dataPublicname = $this->Mvhht->getPublicnameByIdCamp($dataSearchOffSet[$i]['id']);
-				$firstImageLinkOfCampaign = $this->Mvhht->getFirstImageLinkByIdCampaign($dataSearchOffSet[$i]['id']);
-				$data = ['image_link' => $firstImageLinkOfCampaign, 'price' => $dataSearchOffSet[$i]['price'], 'url' => $dataSearchOffSet[$i]['url'], 'title' => $dataSearchOffSet[$i]['title'], 'publicname' => $dataPublicname[0]['publicname']];
-				array_push($allData, $data);
-			}
-			echo json_encode($allData);
-		} else {
-			redirect('http://localhost:8012/teemarket/error');
-		}
-	}
-
-
-	public function view_product($publicname,$url)
-	{
-		if ($this->Mvhht->getDataByPublicnameAndUrl($publicname, $url)){
-			$dataCategory = $this->Mvhht->getDataCategory();
-			$dataProduct = $this->Mvhht->getDataByPublicnameAndUrl($publicname, $url);
-			$dataCampaignColor = $this->Mvhht->getDataColorsByIdCamp($dataProduct[0]['id']);
-
-			$this->load->view('product_details_view', ['category' => $dataCategory,'campaign_color' => $dataCampaignColor, 'dataCamp'=> $dataProduct]);
-		} else{
-			redirect('http://localhost:8012/teemarket/error');
-		}
-	}
-
-	public function cart()
-	{
-		$dataCategory = $this->Mvhht->getDataCategory();
-		$this->load->view('cart_view',['category' => $dataCategory]);
-	}
-
-	public function add_to_cart(){
-		if ($this->input->post('id')){
-			$id = $this->input->post('id');
-			$image_link = $this->input->post('image_link');
-			$color_code = $this->input->post('color_code');
-			$size = $this->input->post('size');
-			$quantity = $this->input->post('quantity');
-
-			$dataProduct=$this->Mvhht->getDataProductById($id);
-			$dataColor=$this->Mvhht->getDataColorByColorCode($color_code);
-			$new_product = array(
-				array(
-					'id'			=> $id,
-					'image_link'	=> $image_link,
-					'id_color'		=> $dataColor[0]['id'],
-					'color'			=> $dataColor[0]['color'],
-					'title'			=> $dataProduct[0]['title'],
-					'price'			=> $dataProduct[0]['price'],
-					'size' 			=> $size,
-					'quantity'		=> $quantity,
-				)
-			);
-			if(isset($_SESSION['product'])){// Neu co Session product
-				$found = false;
-				foreach($_SESSION['product'] as $cart_item){
-					if(($cart_item['id'] == $id) && ($cart_item['$color_code'] == $color_code) && ($cart_item['size'] == $size)){
-						$product[] = array(
-							'id'			=> $cart_item['id'],
-							'image_link'	=> $cart_item['image_link'],
-							'id_color'		=> $cart_item['id_color'],
-							'color'			=> $cart_item['color'],
-							'color_code'	=> $cart_item['color_code'],
-							'title'			=> $cart_item['title'],
-							'price'			=> $cart_item['price'],
-							'size'			=> $cart_item['size'],
-							'quantity'		=> ($quantity + $cart_item['quantity'])
-						);
-						$found = true;
-					} else {
-						$product[] = array(
-							'id'			=> $cart_item['id'],
-							'image_link'	=> $cart_item['image_link'],
-							'id_color'		=> $cart_item['id_color'],
-							'color'			=> $cart_item['color'],
-							'color_code'	=> $cart_item['color_code'],
-							'title'			=> $cart_item['title'],
-							'price'			=> $cart_item['price'],
-							'size'			=> $cart_item['size'],
-							'quantity'		=> $cart_item['quantity']
-						);
-					}
-				}
-				if($found == true){ //Neu 2 san pham giong nhau
-					$_SESSION['product'] = $product;
-					unset($_SESSION['success']);
-					$_SESSION['success']='thanh cong';
-
-				}else{ //Neu 2 san pham khac nhau
-					$_SESSION['product'] = array_merge($product,$new_product);
-					unset($_SESSION['success']);
-					$_SESSION['success']='thanh cong';
-				}
-			} else {// Neu khong co Session product
-				$_SESSION['product'] = $new_product;
-				unset($_SESSION['success']);
-				$_SESSION['success']='thanh cong';
-			}
-		} else{
-			redirect('http://localhost:8012/teemarket/error');
-		}
-	}
-
-	public function update_cart(){
-		if ($this->input->post('quantityString')){
-			$quantityString =  $this->input->post('quantityString');
-			$quantityArray = explode("-",$quantityString);
-
-			foreach ($_SESSION['product'] as $keyUpdate => $value) {
-				$_SESSION['product'][$keyUpdate]['quantity'] = $quantityArray[$keyUpdate];
-			}
-			$result = [
-				'status' => true,
-				'kq'     => $_SESSION['product']
-			];
-			echo json_encode($result);
-		} else{
-			redirect('http://localhost:8012/teemarket/error');
-		}
-	}
-
-	public function remove_product($id,$id_color,$size){
-		$found = false;
-		if (isset($_SESSION['product'])){
-			foreach ($_SESSION['product'] as $key => $value) {
-				if(($value['id'] == $id) && ($value['id_color'] == $id_color) && ($value['size'] == $size)){
-					$found = true;
-					\array_splice($_SESSION['product'],$key,1);
-					redirect($_SERVER['HTTP_REFERER']);
-				}
-			}
-			if($_SESSION['product'] == array()){
-				unset($_SESSION['product']);
-				redirect($_SERVER['HTTP_REFERER']);
-			}
-		}
-		if ($found == false){
-			redirect('http://localhost:8012/teemarket/error');
-		}
-	}
-
-	public function checkout(){
-		if (empty($_SESSION['product'])){
-			redirect('http://localhost:8012/teemarket/cart');
-		} else{
-			$dataCategory = $this->Mvhht->getDataCategory();
-			$this->load->view('checkout_view',['category' => $dataCategory]);
-		}
-	}
-
-	public function insert_order(){
-		if ($this->input->post('idString')){
-			$email = $this->input->post('email');
-			$fullname = $this->input->post('fullname');
-			$address = $this->input->post('address');
-			$countries = $this->input->post('countries');
-			$states = $this->input->post('states');
-			$cities = $this->input->post('cities');
-			$zip = $this->input->post('zip');
-			$idString = $this->input->post('idString');
-			$sizeString = $this->input->post('sizeString');
-			$idColorString = $this->input->post('idColorString');
-			$quantityString = $this->input->post('quantityString');
-
-			$idArray = explode("-",$idString);
-			$sizeArray = explode("-",$sizeString);
-			$idColorArray = explode("-",$idColorString);
-			$quantityArray = explode("-",$quantityString);
-
-			$inserInfoCustomer = $this->Mvhht->insertInfoCustomer($email, $fullname, $address, $countries, $states, $cities, $zip);
-			$id_customer = $inserInfoCustomer[0]['LAST_INSERT_ID()'];
-
-			$order = array(
-				array(
-				)
-			);
-			for ($i = 0; $i < count($idArray); $i++){
-				$order[$i] = array(
-					'id_customer' 	=> $id_customer,
-					'id_campaign' 	=> $idArray[$i],
-					'size' 			=> $sizeArray[$i],
-					'id_color' 		=> $idColorArray[$i],
-					'quantity' 		=> $quantityArray[$i]
-				);
-			}
-			foreach ($order as $key => $value) {
-				$this->Mvhht->insertOrder($value['id_customer'],$value['id_campaign'],$value['size'],$value['id_color'],$value['quantity']);
-			}
-			unset($_SESSION['product']);
-		} else{
-			redirect('http://localhost:8012/teemarket/error');
-		}
+		redirect('http://10.96.3.52:8012/bcvh');
 	}
 
 }

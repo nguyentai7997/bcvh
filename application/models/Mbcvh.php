@@ -18,13 +18,13 @@ class Mbcvh extends CI_Model {
 
 	function getDataProblemByIdUser($idUser)
 	{
-		$query = $this->db->query("SELECT id_problem, software, problem_detail, time_start FROM problem, software WHERE problem.id_software = software.id_software AND problem.id_user = '$idUser' ORDER BY problem.time_start DESC ")->result_array();
+		$query = $this->db->query("SELECT id_problem, software, problem_detail, time_start FROM problem, software WHERE problem.id_software = software.id_software AND problem.id_user = '$idUser' AND problem.status = '1' ORDER BY problem.time_start DESC ")->result_array();
 		return $query;
 	}
 
 	function getAllDataProblem()
 	{
-		$query = $this->db->query("SELECT id_problem, software, problem_detail, time_start FROM problem, software WHERE problem.id_software = software.id_software ORDER BY problem.time_start DESC ")->result_array();
+		$query = $this->db->query("SELECT id_problem, software, problem_detail, time_start FROM problem, software WHERE problem.id_software = software.id_software AND problem.status = '1' ORDER BY problem.time_start DESC ")->result_array();
 		return $query;
 	}
 
@@ -44,7 +44,7 @@ class Mbcvh extends CI_Model {
 	{
 		$strSelect = "SELECT id_problem, software, problem_detail, time_start FROM problem, software 
 									WHERE problem.id_software = software.id_software 
-									AND problem.id_user = '$idUser'";
+									AND problem.id_user = '$idUser' AND problem.status = '1'";
 		if ($keyword != "") {
 			$strSelect = $strSelect." AND (problem.problem_detail LIKE '%$keyword%')";
 		}
@@ -55,6 +55,25 @@ class Mbcvh extends CI_Model {
 			$strSelect = $strSelect." AND DATE(problem.time_start) >= '$time_start' AND DATE(problem.time_end) <= '$time_end'";
 		}
 		$strSelect = $strSelect." ORDER BY problem.time_start DESC;";
+		$query = $this->db->query($strSelect)->result_array();
+		return $query;
+	}
+
+	function getDataSearchProblemByOffsetAndIdUser($offset,$limit,$idUser,$keyword,$time_start,$time_end,$id_software)
+	{
+		$strSelect = "SELECT id_problem, software, problem_detail, time_start FROM problem, software 
+									WHERE problem.id_software = software.id_software 
+									AND problem.id_user = '$idUser' AND problem.status = '1'";
+		if ($keyword != "") {
+			$strSelect = $strSelect." AND (problem.problem_detail LIKE '%$keyword%')";
+		}
+		if ($id_software != "") {
+			$strSelect = $strSelect." AND (problem.id_software = '$id_software')";
+		}
+		if ($time_start != '') {
+			$strSelect = $strSelect." AND DATE(problem.time_start) >= '$time_start' AND DATE(problem.time_end) <= '$time_end'";
+		}
+		$strSelect = $strSelect." ORDER BY problem.time_start DESC LIMIT $offset, $limit;";
 		$query = $this->db->query($strSelect)->result_array();
 		return $query;
 	}
@@ -77,6 +96,24 @@ class Mbcvh extends CI_Model {
 		return $query;
 	}
 
+	function getDataSearchProblemByOffset($offset,$limit,$keyword,$time_start,$time_end,$id_software)
+	{
+		$strSelect = "SELECT id_problem, software, problem_detail, time_start FROM problem, software 
+									WHERE problem.id_software = software.id_software";
+		if ($keyword != "") {
+			$strSelect = $strSelect." AND (problem.problem_detail LIKE '%$keyword%')";
+		}
+		if ($id_software != "") {
+			$strSelect = $strSelect." AND (problem.id_software = '$id_software')";
+		}
+		if ($time_start != '') {
+			$strSelect = $strSelect." AND DATE(problem.time_start) >= '$time_start' AND DATE(problem.time_end) <= '$time_end'";
+		}
+		$strSelect = $strSelect." ORDER BY problem.time_start DESC LIMIT $offset, $limit;";
+		$query = $this->db->query($strSelect)->result_array();
+		return $query;
+	}
+
 	function getIdUserByIdSoftware($idSoftware)
 	{
 		$query = $this->db->query("SELECT * FROM software WHERE id_software = '$idSoftware' ")->result_array();
@@ -85,7 +122,7 @@ class Mbcvh extends CI_Model {
 
 	public function insertProblem($idSoftware,$idUser,$problemDetail,$solution,$filename,$dateStart,$dateEnd)
 	{
-		$query = $this->db->query("INSERT INTO problem (id_software,id_user,problem_detail,solution,image,time_start,time_end) VALUES ('$idSoftware','$idUser','$problemDetail','$solution','$filename','$dateStart','$dateEnd')");
+		$query = $this->db->query("INSERT INTO problem (id_software,id_user,problem_detail,solution,image,time_start,time_end,status) VALUES ('$idSoftware','$idUser','$problemDetail','$solution','$filename','$dateStart','$dateEnd','1')");
 		return $query;
 	}
 
@@ -113,15 +150,27 @@ class Mbcvh extends CI_Model {
 		return $query;
 	}
 
+	public function getDataProblemByOffsetAndIdUser($offset,$limit,$idUser)
+	{
+		$query = $this->db->query("SELECT id_problem, software, problem_detail, time_start FROM problem, software WHERE problem.id_software = software.id_software AND problem.id_user = '$idUser' AND problem.status = '1' ORDER BY problem.time_start DESC LIMIT $offset, $limit;")->result_array();
+		return $query;
+	}
+
 	public function getDataProblemByOffset($offset,$limit)
 	{
-		$query=$this->db->query("SELECT campaign.id,campaign.title,campaign.price,campaign.url,account.publicname FROM campaign,account WHERE campaign.id_seller = account.id AND status = 'active' LIMIT $offset, $limit")->result_array();
+		$query = $this->db->query("SELECT id_problem, software, problem_detail, time_start FROM problem, software WHERE problem.id_software = software.id_software AND problem.status = '1' ORDER BY problem.time_start DESC LIMIT $offset, $limit;")->result_array();
 		return $query;
 	}
 
 	function getDataReport()
 	{
-		$query = $this->db->query("SELECT * FROM report")->result_array();
+		$query = $this->db->query("SELECT * FROM report ORDER BY report.time DESC")->result_array();
+		return $query;
+	}
+
+	function getDataYear()
+	{
+		$query = $this->db->query("SELECT year FROM year ORDER BY year.id DESC")->result_array();
 		return $query;
 	}
 
@@ -133,7 +182,7 @@ class Mbcvh extends CI_Model {
 
 	function getDataBGTReport()
 	{
-		$query = $this->db->query("SELECT * FROM bgt_report")->result_array();
+		$query = $this->db->query("SELECT * FROM bgt_report ORDER BY bgt_report.time DESC")->result_array();
 		return $query;
 	}
 

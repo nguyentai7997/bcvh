@@ -62,12 +62,13 @@
 			today = yyyy + '-' + mm + '-' + dd;
 			// document.write(today);
 			$.ajax({
-				url: 'http://localhost:8012/bcvh/getEvents',
+				url: 'http://10.96.3.52:8012/bcvh/getEvents',
 				type: 'post',
 				data: {
 					code : 'nguyentai17',
 				},success:function(res) {
 					var obj = JSON.parse(res);
+					console.log(obj);
 					var eventsArray = [];
 					for (i=0; i < obj.length; i++){
 						eventsArray.push({
@@ -106,16 +107,16 @@
 							$('#default_modal').css('display','block');
 							$('.wysihtml5-supported').addClass('modal-open');
 							$.ajax({
-								url: 'http://localhost:8012/bcvh/viewEvent',
+								url: 'http://10.96.3.52:8012/bcvh/viewEvent',
 								type: 'post',
 								data: {
 									idEvent : idEvent,
 								}, success: function (res) {
 									var obj = JSON.parse(res);
-									console.log(obj);
 									var html = "";
 									$('.modal-body').empty();
-
+									var dateStart = new Date(obj[0]['time_start']);
+									var dateEnd = new Date(obj[0]['time_end']);
 									html +=						'<div class="row">'
 									html +=							'<label class="col-sm-3" style="font-weight: bold;">Phần mềm: </label>'
 									html +=							'<div class="col-sm-9">'+obj[0]['software']+'</div>'
@@ -136,7 +137,7 @@
 									html +=							'<div class="col-sm-9">'
 									html +=								'<div class="thumbnail">'
 									html +=									'<div class="thumb">'
-									html +=										'<img alt="" src="http://localhost:8012/bcvh/uploads/'+obj[0]['image']+'">'
+									html +=										'<img alt="" src="http://10.96.3.52:8012/bcvh/uploads/'+obj[0]['image']+'">'
 									html +=									'</div>'
 									html +=								'</div>'
 									html +=							'</div>'
@@ -144,12 +145,12 @@
 
 									html +=						'<div class="row">'
 									html +=							'<label class="col-sm-3" style="font-weight: bold;">Ngày phát sinh: </label>'
-									html +=							'<div class="col-sm-9">'+obj[0]['time_start']+'</div>'
+									html +=							'<div class="col-sm-9">'+((dateStart.getMonth() > 8) ? (dateStart.getMonth() + 1) : ('0' + (dateStart.getMonth() + 1))) + '/' + ((dateStart.getDate() > 9) ? dateStart.getDate() : ('0' + dateStart.getDate())) + '/' + dateStart.getFullYear()+'</div>'
 									html +=						'</div>'
 
 									html +=						'<div class="row">'
 									html +=							'<label class="col-sm-3" style="font-weight: bold;">Ngày khắc phục: </label>'
-									html +=							'<div class="col-sm-9">'+obj[0]['time_end']+'</div>'
+									html +=							'<div class="col-sm-9">'+((dateEnd.getMonth() > 8) ? (dateEnd.getMonth() + 1) : ('0' + (dateEnd.getMonth() + 1))) + '/' + ((dateEnd.getDate() > 9) ? dateEnd.getDate() : ('0' + dateEnd.getDate())) + '/' + dateEnd.getFullYear()+'</div>'
 									html +=						'</div>'
 
 									$('.modal-body').append(html);

@@ -100,13 +100,19 @@
 				<!-- /form components -->
 				<?php } ?>
 				<ul class="icons-list">
-					<li><a data-toggle="collapse" data-target="#collapsible-submenu"><i class="fa fa-folder-open" style="margin-top: 2px"></i> Năm 2022</a>
-						<ul id="collapsible-submenu" class="collapse in">
-							<?php foreach ($report as $key => $value) { ?>
-							<li><a href="<?= base_url().'reports/'.$value['filename']?>" target="_blank"><?= $value['filename'] ?></a></li>
-							<?php } ?>
-						</ul>
-					</li>
+					<?php foreach ($year as $key => $value1) { ?>
+						<li>
+							<a data-toggle="collapse" data-target="#collapsible-submenu-<?= $value1['year'] ?>">
+								<i class="fa fa-folder-open" style="margin-top: 2px"></i> Năm <?= $value1['year'] ?>
+							</a>
+							<ul id="collapsible-submenu-<?= $value1['year'] ?>" class="collapse in">
+								<?php foreach ($report as $key => $value) { if (str_contains($value['filename'], $value1['year'])) { ?>
+									<li><a href="<?= base_url().'reports/'.$value['filename']?>" target="_blank"><?= $value['filename'] ?></a></li>
+								<?php }
+								} ?>
+							</ul>
+						</li>
+					<?php } ?>
 				</ul>
 			</div>
 		</div>

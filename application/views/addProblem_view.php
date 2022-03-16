@@ -52,6 +52,7 @@
 
 	<!--	NguyenTai's js-->
 	<script type="text/javascript" src="<?= base_url()?>assets/js/bcvh.js"></script>
+	<script type="text/javascript" src="<?= base_url()?>assets/js/problem.js"></script>
 
 	<style>
 
@@ -99,7 +100,7 @@
 						<label class="col-sm-2 control-label">Chọn phần mềm: </label>
 						<div class="col-sm-10">
 							<select class="form-control software" name="software" required>
-								<option value="" disabled selected>Chọn một phần mềm...</option>
+								<option value="" disabled selected>Chọn phần mềm/hệ thống</option>
 								<?php foreach ($software as $key => $value) { ?>
 									<option value="<?php echo $value['id_software'];?>"><?php echo $value['software'];?></option>
 								<?php } ?>
@@ -126,7 +127,7 @@
 					<div class="form-group">
 						<label class="col-sm-2 control-label">Ảnh trao đổi: </label>
 						<div class="col-sm-10">
-							<input type="file" id="unstyled-file" name="file">
+							<input type="file" id="unstyled-file" name="file" required>
 						</div>
 					</div>
 

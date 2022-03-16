@@ -13,20 +13,20 @@
 	<link href="<?= base_url()?>assets/css/styles.css" rel="stylesheet" type="text/css">
 	<link href="<?= base_url()?>assets/css/font-awesome.min.css" rel="stylesheet" type="text/css">
 	<link href='https://fonts.googleapis.com/css?family=Cuprum' rel='stylesheet' type='text/css'>
-	<!--	<link href="--><?//= base_url()?><!--assets/css/main.css" rel="stylesheet" type="text/css">-->
-	<!--	Nguyen Tai' css-->
+	<link href="<?= base_url()?>assets/css/main.css" rel="stylesheet" type="text/css">
+<!--	Nguyen Tai' css-->
 	<link href="<?= base_url()?>assets/css/customize.css" rel="stylesheet" type="text/css">
 
-	<!--	Thư viện chọn ngày-->
+<!--	Thư viện chọn ngày-->
 	<script type="text/javascript" src="https://cdn.jsdelivr.net/jquery/latest/jquery.min.js"></script>
 	<script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
 	<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
 	<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
 
 
-	<!--	<script type="text/javascript" src="--><?//= base_url()?><!--assets/ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>-->
-	<!--	<script type="text/javascript" src="--><?//= base_url()?><!--assets/ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/jquery-ui.min.js"></script>-->
-	<!---->
+<!--	<script type="text/javascript" src="--><?//= base_url()?><!--assets/ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>-->
+<!--	<script type="text/javascript" src="--><?//= base_url()?><!--assets/ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/jquery-ui.min.js"></script>-->
+
 	<script type="text/javascript" src="<?= base_url()?>assets/js/plugins/forms/uniform.min.js"></script>
 	<script type="text/javascript" src="<?= base_url()?>assets/js/plugins/forms/select2.min.js"></script>
 	<script type="text/javascript" src="<?= base_url()?>assets/js/plugins/forms/inputmask.js"></script>
@@ -36,13 +36,13 @@
 	<script type="text/javascript" src="<?= base_url()?>assets/js/plugins/forms/multiselect.js"></script>
 	<script type="text/javascript" src="<?= base_url()?>assets/js/plugins/forms/validate.min.js"></script>
 	<script type="text/javascript" src="<?= base_url()?>assets/js/plugins/forms/tags.min.js"></script>
-	<!---->
+
 	<script type="text/javascript" src="<?= base_url()?>assets/js/plugins/forms/uploader/plupload.full.min.js"></script>
 	<script type="text/javascript" src="<?= base_url()?>assets/js/plugins/forms/uploader/plupload.queue.min.js"></script>
-	<!---->
+
 	<script type="text/javascript" src="<?= base_url()?>assets/js/plugins/forms/wysihtml5/wysihtml5.min.js"></script>
 	<script type="text/javascript" src="<?= base_url()?>assets/js/plugins/forms/wysihtml5/toolbar.js"></script>
-	<!---->
+
 	<script type="text/javascript" src="<?= base_url()?>assets/js/plugins/interface/jgrowl.min.js"></script>
 	<script type="text/javascript" src="<?= base_url()?>assets/js/plugins/interface/datatables.min.js"></script>
 	<script type="text/javascript" src="<?= base_url()?>assets/js/plugins/interface/prettify.js"></script>
@@ -51,17 +51,17 @@
 	<script type="text/javascript" src="<?= base_url()?>assets/js/plugins/interface/timepicker.min.js"></script>
 	<script type="text/javascript" src="<?= base_url()?>assets/js/plugins/interface/fullcalendar.min.js"></script>
 	<script type="text/javascript" src="<?= base_url()?>assets/js/plugins/interface/collapsible.min.js"></script>
-	<!---->
+
 	<script type="text/javascript" src="<?= base_url()?>assets/js/bootstrap.min.js"></script>
 	<script type="text/javascript" src="<?= base_url()?>assets/js/application.js"></script>
-	<!---->
+
 	<script type="text/javascript" src="<?= base_url()?>assets/js/main.js"></script>
-	<!--	NguyenTai's js-->
+<!--	NguyenTai's js-->
 	<script type="text/javascript" src="<?= base_url()?>assets/js/bcvh.js"></script>
 	<script type="text/javascript" src="<?= base_url()?>assets/js/problem.js"></script>
-	<!-- Thu vien thong bao -->
-	<link rel="stylesheet" href="<?= base_url()?>assets/css/toastr.min.css">
-	<script src="<?= base_url()?>assets/js/toastr.min.js"></script>
+<!-- 	Thu vien thong bao -->
+<!--	<link rel="stylesheet" href="--><?//= base_url()?><!--assets/css/toastr.min.css">-->
+<!--	<script src="--><?//= base_url()?><!--assets/js/toastr.min.js"></script>-->
 
 	<style>
 
@@ -86,7 +86,6 @@
 
 <!-- Page container -->
 <div class="page-container container-fluid">
-<?php echo $_SERVER['REQUEST_URI']; ?>
 	<?php include("sidebar_view.php") ?>
 
 	<!-- Page content -->
@@ -114,18 +113,27 @@
 					<div class="row">
 						<form class="form-horizontal" role="form" action="<?= base_url()?>search_result" enctype="multipart/form-data" method="post">
 							<div class="col-md-3">
-								<input type="text" class="form-control keyword" name="keyword" placeholder="Điền từ khoá lọc...">
+								<input type="text" class="form-control keyword" name="keyword" placeholder="Điền từ khoá lọc..." value="<?php if ($keyword != '') {echo $keyword;}?>">
 							</div>
 
 							<div class="col-md-3">
-								<input type="text" class="form-control dates" placeholder="Từ ngày đến ngày" name="datefilter" value="">
+								<input type="text" class="form-control dates" placeholder="Từ ngày đến ngày" name="datefilter" value="<?php if ($startDate != ''){echo date("m/d/Y", strtotime($startDate))." - ".date("m/d/Y", strtotime($endDate));}?>">
 							</div>
 
 							<div class="col-md-3">
 								<select class="form-control software" name="software">
-									<option value="" selected>Chọn một phần mềm...</option>
-									<?php foreach ($dataSoftware as $key => $value) { ?>
-										<option value="<?php echo $value['id_software'];?>"><?php echo $value['software'];?></option>
+									<?php if (isset($id_software)){ ?>
+										<option value="">Chọn phần mềm/hệ thống</option>
+										<?php foreach ($dataSoftware as $key => $value) { ?>
+											<option value="<?php echo $value['id_software'];?>" <?php if ($id_software == $value['id_software']){echo "selected";} ?> >
+												<?php echo $value['software'];?>
+											</option>
+										<?php } ?>
+									<?php } else { ?>
+										<option value="" selected>Chọn phần mềm/hệ thống</option>
+										<?php foreach ($dataSoftware as $key => $value) { ?>
+											<option value="<?php echo $value['id_software'];?>"><?php echo $value['software'];?></option>
+										<?php } ?>
 									<?php } ?>
 								</select>
 							</div>
@@ -156,7 +164,7 @@
 							<td><?php echo $key+1;?></td>
 							<td><?php echo $value['software'];?></td>
 							<td><?php echo $value['problem_detail'];?></td>
-							<td><?php echo $value['time_start'];?></td>
+							<td><?php echo date("m/d/Y", strtotime($value['time_start']));?></td>
 
 							<td>
 								<div class="table-controls">
@@ -180,15 +188,17 @@
 					</tbody>
 				</table>
 				<div class="table-footer">
-
-					<ul class="pagination">
-						<li><a href="#">Prev</a></li>
-						<li><a href="#">1</a></li>
-						<li><a href="#">2</a></li>
-						<li class="active"><a href="#">3</a></li>
-						<li><a href="#">4</a></li>
-						<li><a href="#">Next</a></li>
-					</ul>
+					<?php if ($dataProblem != null) { ?>
+						<ul class="pagination">
+							<?php for($i=0; $i<$countPage; $i++){ ?>
+								<li class="page-item <?php if ($i == 0){echo 'active';}?>" onclick="getPageSearch(this)"><a style="cursor: pointer"><?php echo $i+1; ?></a></li>
+							<?php } ?>
+						</ul>
+					<?php } else { ?>
+						<ul class="pagination">
+							<li class="page-item active"><button class="btn btn-primary btn-xs">1</button></li>
+						</ul>
+					<?php } ?>
 				</div>
 			</div>
 			<!-- /basic inputs -->

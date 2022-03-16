@@ -14,11 +14,11 @@
 			<li class="<?php if ($_SERVER['REQUEST_URI'] == '/bcvh/bgt_report'){echo 'active';}?>">
 				<a href="<?= base_url()?>bgt_report"><i class="fa fa-file"></i> Báo cáo BGT</a>
 			</li>
-			<?php if ($_SESSION['user']['role'] == 1){ ?>
-				<li class="<?php if ($_SERVER['REQUEST_URI'] == '/bcvh/user'){echo 'active';}?>">
-					<a href="<?= base_url()?>user"><i class="fa fa fa-user"></i> Người dùng</a>
-				</li>
-			<?php } ; ?>
+<!--			--><?php //if ($_SESSION['user']['role'] == 1){ ?>
+<!--				<li class="--><?php //if ($_SERVER['REQUEST_URI'] == '/bcvh/user'){echo 'active';}?><!--">-->
+<!--					<a href="--><?//= base_url()?><!--user"><i class="fa fa fa-user"></i> Người dùng</a>-->
+<!--				</li>-->
+<!--			--><?php //} ; ?>
 		<?php } else { ?>
 			<li class="<?php if ($_SERVER['REQUEST_URI'] == '/bcvh/dashboard'){echo 'active';}?>">
 				<a href="<?= base_url()?>"><i class="fa fa-calendar"></i> Tổng quan</a>
